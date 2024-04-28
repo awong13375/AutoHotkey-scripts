@@ -1,0 +1,27 @@
+PACs/EMR integration script for Inteleviewer and vOACIS
+Author: Alex Wong, McGill Radiology Resident
+
+******INSTRUCTIONS******
+
+How to use this script:
+1) Log into Inteleviewer and have vOACIS opened
+2) Launch .exe file, enter username/password
+2) Open a case on Inteleviewer and press "Ctrl + Alt + Shift + O"
+3) Watch the magic happen! (Don't move mouse or press keyboard, script will take ~4 seconds)
+4) To restart or turn off script, go to bottom right notification tray and right click the green H application to exit
+
+Other functionality:
+Ctrl + Alt + Shift + L -> Labs for the same patient
+Ctrl + Alt + Shift + S -> OPERA Surgical history for the same patient
+Ctrl + Alt + Shift + P -> Pathology reports for the same patient
+Ctrl + Alt + Shift + D -> Documents viewer for the same patient
+
+******IMPORTANT******
+Please edit the following OACIS settings so the script will function as intended:
+1) Log into vOACIS
+2) In the top left, click User -> User Preferences
+3) Click Misc tab and uncheck "Save Context at Logout"
+4) Save settings
+
+*********************
+Ongoing work will be made to improve/expand the functionality of this script, please feel free to send me an email if you have any new ideas or issues with the script (alexw13375@gmail.com).
