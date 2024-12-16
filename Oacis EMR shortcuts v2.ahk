@@ -44,19 +44,24 @@ For id in HWNDs{
 }
 Sleep 300
 Send "{Esc}"
-Sleep 50
-Send "{Esc}"
 
 ;Check if logged in, if not then log in
 if (PixelGetColor(100, 40) != 000000){
-    MouseClick "left", 710, 290
+    Sleep 250
+    Send "!u"
     Sleep 100
-    SendText A
+    Send "^a"
     Sleep 100
-    Send "{Tab}"
-    Sleep 100
-    SendText B
-    Sleep 100
+    Send "{Backspace}"
+    Sleep 250
+    Send "r30470"
+    ;SendText A
+    Sleep 250
+    Send "!p"
+    Sleep 250
+    Send "Spongeb0b?"
+    ;SendText B
+    Sleep 250
     Send "!l"
     Sleep 1750
 }
