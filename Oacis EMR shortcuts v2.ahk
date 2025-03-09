@@ -7,6 +7,16 @@
 ;
 ;}
 
+; Auto shutdown script after 18 hours to avoid other people using login
+SetTimer AutoShutdown, 64800000
+
+AutoShutdown()
+{
+    MsgBox "Oacis EMR script has automatically terminated after running for an extended period of time. Please relaunch the script and re-enter your username and password.", "Oacis EMR script Auto-shutdown."
+    ExitApp
+}
+
+
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
 
@@ -59,7 +69,7 @@ if (PixelGetColor(100, 40) != 000000){
     Sleep 250
     Send "!p"
     Sleep 250
-    Send "Spongeb0b?"
+    Send "Spongeb0b????"
     ;SendText B
     Sleep 250
     Send "!l"
@@ -217,7 +227,7 @@ Return
 
 ;----------------------------------------------------------------------------------------
 ;Open Documents Viewer
-^!+d::{
+^+d::{
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -238,7 +248,7 @@ Return
 
 ;----------------------------------------------------------------------------------------
 ;Open Labs
-^!+l::{
+^+l::{
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -258,7 +268,7 @@ Return
 
 ;----------------------------------------------------------------------------------------
 ;Open Pathology
-^!+p::{
+^+p::{
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -279,7 +289,7 @@ Return
 
 ;----------------------------------------------------------------------------------------
 ;Open Surgical history
-^!+s::{
+^+s::{
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
