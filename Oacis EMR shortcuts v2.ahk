@@ -1,27 +1,31 @@
 ﻿#Requires AutoHotkey v2.0
 ;----------------------------------------------------------------------------------------
 
-;Check if oacis and Inteleviewer launched, if not send error message
-;if !WinExist("ahk_exe InteleViewer.exe") || !WinExist("ahk_exe wfica32.EXE"){
-;    MsgBox (, "Please launch Inteleviewer and/or Oacis before proceeding.")
-;
-;}
-
 ; Auto shutdown script after 18 hours to avoid other people using login
 SetTimer AutoShutdown, 64800000
-
 AutoShutdown()
 {
     MsgBox "Oacis EMR script has automatically terminated after running for an extended period of time. Please relaunch the script and re-enter your username and password.", "Oacis EMR script Auto-shutdown."
     ExitApp
 }
 
-
+; Manual input username and password for Oacis
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
 
 ;EMR patient launcher
-^!+o::{
+^+o::{
+
+;Check if oacis and Inteleviewer launched, if not send error message
+if not WinExist("ahk_exe InteleViewer.exe"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
+if not WinExist("ahk_exe wfica32.EXE"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
 
 ;Copy MRN from PACS
 
@@ -48,37 +52,38 @@ For id in HWNDs{
     title := WinGetTitle(id)
     if InStr(title, "OACIS"){
         WinActivate(id)
-        Sleep 500
+        Sleep 400
         WinActivate (id)
     }
 }
-Sleep 300
+Sleep 100
 Send "{Esc}"
 
 ;Check if logged in, if not then log in
 if (PixelGetColor(100, 40) != 000000){
-    Sleep 250
+    Sleep 200
     Send "!u"
-    Sleep 100
+    Sleep 200
     Send "^a"
-    Sleep 100
     Send "{Backspace}"
+    Send "{Ctrl Up}"
+    Sleep 200
+    ;Send "{text}r30470"
+    SendText A
     Sleep 250
-    Send "r30470"
-    ;SendText A
-    Sleep 250
-    Send "!p"
-    Sleep 250
-    Send "Spongeb0b????"
-    ;SendText B
+    Send "{Tab}"
+    Sleep 200
+    ;Send "{text}Spongeb0b????"
+    SendText B
+    Send "{Tab}"
     Sleep 250
     Send "!l"
-    Sleep 1750
+    Sleep 1250
 }
 
 ;Open single patient lookup
 MouseClick "left", 300, 70
-Sleep 500
+Sleep 750
 
 ;Search specific database based on hospital MRN
 
@@ -89,12 +94,10 @@ if (InStr(mrn, "L"))!= 0 {
     Send NewStr
     Sleep 100
     Send "{Tab}"
-    Sleep 50
+    Sleep 50  
     Send "{Tab}"
     Sleep 50
     Send "{Tab}"
-    Sleep 50
-    Send "{Down}"
     Sleep 50
     Send "{Down}"
     Sleep 50
@@ -228,6 +231,18 @@ Return
 ;----------------------------------------------------------------------------------------
 ;Open Documents Viewer
 ^+d::{
+
+;Check if oacis and Inteleviewer launched, if not send error message
+if not WinExist("ahk_exe InteleViewer.exe"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
+if not WinExist("ahk_exe wfica32.EXE"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -249,6 +264,18 @@ Return
 ;----------------------------------------------------------------------------------------
 ;Open Labs
 ^+l::{
+
+;Check if oacis and Inteleviewer launched, if not send error message
+if not WinExist("ahk_exe InteleViewer.exe"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
+if not WinExist("ahk_exe wfica32.EXE"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -269,6 +296,18 @@ Return
 ;----------------------------------------------------------------------------------------
 ;Open Pathology
 ^+p::{
+
+;Check if oacis and Inteleviewer launched, if not send error message
+if not WinExist("ahk_exe InteleViewer.exe"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
+if not WinExist("ahk_exe wfica32.EXE"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -290,6 +329,18 @@ Return
 ;----------------------------------------------------------------------------------------
 ;Open Surgical history
 ^+s::{
+
+;Check if oacis and Inteleviewer launched, if not send error message
+if not WinExist("ahk_exe InteleViewer.exe"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
+if not WinExist("ahk_exe wfica32.EXE"){
+    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+    Return
+}
+
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe wfica32.EXE")
 For id in HWNDs{
@@ -306,3 +357,4 @@ Sleep 100
 Send "!o"
 Return
 }
+
