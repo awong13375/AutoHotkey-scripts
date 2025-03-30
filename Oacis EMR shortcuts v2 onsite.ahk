@@ -13,6 +13,15 @@ AutoShutdown()
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
 
+
+; Start programs
+
+; Inteleviewer
+; vOACIS
+; RadImage
+
+
+
 ;EMR patient launcher
 ^+o::{
 
@@ -28,7 +37,6 @@ if not WinExist("ahk_exe java.exe"){
 }
 
 ;Copy MRN from PACS
-
 ;;Ensure activation of search tool window
 HWNDs := WinGetList("ahk_exe InteleViewer.exe")
 For id in HWNDs{
@@ -36,14 +44,14 @@ For id in HWNDs{
     if InStr(title, "Search Tool"){
         WinActivate(id)
         Sleep 500
-        WinActivate (id)
+        WinActivate(id)
     }
 } 
-Sleep 300
+Sleep 100
 
 A_Clipboard := ""
 MouseClick "left", 50, 105, 2
-Sleep 300
+Sleep 100
 Send "^c"
 Sleep 10
 Send "^c"
@@ -77,6 +85,8 @@ if (PixelGetColor(42, 12) != 000000){
     Send "{Backspace}"
     Send "{Ctrl Up}"
     Sleep 100
+    Send "!u"
+    Sleep 50
     SendText A
     Sleep 250
     Send "{Tab}"
@@ -228,7 +238,13 @@ Sleep 100
 Send "!o"
 Sleep 300
 MouseClick "left", 33, 117
-Sleep 400
+Sleep 100
+MouseClick "left", 440, 42
+Sleep 100
+MouseClick "left", 33, 117
+Sleep 100
+MouseClick "left", 440, 42
+Sleep 100
 MouseClick "left", 33, 117
 Sleep 100
 MouseClick "left", 440, 42
