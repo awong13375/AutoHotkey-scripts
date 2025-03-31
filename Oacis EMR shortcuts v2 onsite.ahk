@@ -33,6 +33,7 @@ MsgBox text, "INSTRUCTIONS"
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
 
+<<<<<<< HEAD
 ; To show instructions again
 ^+i::{
     MsgBox text, "INSTRUCTIONS"
@@ -48,6 +49,16 @@ B := InputBox("Please enter your OACIS password","Password", "password").value
     A := InputBox("Please enter your OACIS username:", "Username").value
     B := InputBox("Please enter your OACIS password:", "Password", "password").value
 }
+=======
+
+; Start programs
+
+; Inteleviewer
+; vOACIS
+; RadImage
+
+
+>>>>>>> 0dca3998293a3e0241077435ea4816ddd4572bf5
 
 ;EMR patient launcher
 ^+o::{
@@ -72,7 +83,11 @@ if not WinExist("ahk_exe java.exe"){
 }
 
 ;Copy MRN from PACS
+<<<<<<< HEAD
 ;Ensure activation of search tool window
+=======
+;;Ensure activation of search tool window
+>>>>>>> 0dca3998293a3e0241077435ea4816ddd4572bf5
 HWNDs := WinGetList("ahk_exe InteleViewer.exe")
 For id in HWNDs{
     title := WinGetTitle(id)
@@ -120,6 +135,7 @@ Pastetext(text){
     A_Clipboard := text
     Send "^v"
     Sleep 100
+<<<<<<< HEAD
     A_Clipboard := ""
     Sleep 100
     A_Clipboard := ClipSaved
@@ -142,6 +158,16 @@ while (PixelGetColor(42, 12) != 000000){
     Send "{Backspace}"
     Sleep 100
     Pastetext(B)
+=======
+    Send "!u"
+    Sleep 50
+    SendText A
+    Sleep 250
+    Send "{Tab}"
+    Sleep 200
+    SendText B
+    Send "{Tab}"
+>>>>>>> 0dca3998293a3e0241077435ea4816ddd4572bf5
     Sleep 250
     Send "!u"
     Sleep 100
@@ -313,7 +339,17 @@ Sleep 100
 Send "!o"
 Sleep 300
 MouseClick "left", 33, 117
+<<<<<<< HEAD
 Sleep 700
+=======
+Sleep 100
+MouseClick "left", 440, 42
+Sleep 100
+MouseClick "left", 33, 117
+Sleep 100
+MouseClick "left", 440, 42
+Sleep 100
+>>>>>>> 0dca3998293a3e0241077435ea4816ddd4572bf5
 MouseClick "left", 33, 117
 Sleep 50
 Send "!r"
