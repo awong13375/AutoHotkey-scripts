@@ -9,47 +9,95 @@ AutoShutdown()
     ExitApp
 }
 
-; Manual input username and password for Oacis
+; Message box with tutorial
+text := "Script is designed to improve your workflow efficiency and reduce the number of clicks on OACIS.`n`n"
+    . "REQUIREMENTS: Please have Inteleviewer opened to the specific patient and study, and OACIS opened.`n`n"
+    . "IMPORTANT: Do not touch keyboard or mouse while shortcut is running.`n`n"
+    . "SHORTCUTS:`n"
+    . "Ctrl+Shift+O = Login to Oacis (if not already logged in), retrieves patient file and opens labs`n"
+    . "Ctrl+Shift+I = To show these instructions again at any time`n"
+    . "Ctrl+Shift+Q = To re-enter OACIS username/password if typo made on first try`n`n"
+    . "The below shortcuts require patient to already be retrieved on Oacis (using Ctrl+Shift+O above)`n"
+    . "Ctrl+Shift+D = Opens Documents viewer`n"
+    . "Ctrl+Shift+P = Opens Pathology`n"
+    . "Ctrl+Shift+L = Opens Labs`n"
+    . "Ctrl+Shift+S = Opens OPERA surgical procedures`n`n`n"
+    . "For those with handsfree dictation setups:`n"
+    . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
+    . "Script creator: Alexander Wong, with the support of ____ who helped test/debug script during its development.`n`n"
+    . "Version: 1.0, released March 31, 2025."
+
+MsgBox text, "INSTRUCTIONS"
+
+; Manual input username and password for OACIS
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
+
+; To show instructions again
+^+i::{
+    MsgBox text, "INSTRUCTIONS"
+}
+
+; Re-enter OACIS username/password
+^+q::{
+    global A
+    global B
+
+    MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
+
+    A := InputBox("Please enter your OACIS username:", "Username").value
+    B := InputBox("Please enter your OACIS password:", "Password", "password").value
+}
 
 ;EMR patient launcher
 ^+o::{
 
+MyGui := Gui(, "Script in progress")
+MyGui.Opt("+AlwaysOnTop +Disabled -SysMenu +Owner")  ; +Owner avoids a taskbar button.
+MyGui.Add("Text",, "Please do not touch keyboard or mouse while script is active.")
+MyGui.Show("NoActivate")  ; NoActivate avoids deactivating the currently active window.
+
+
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
+    MyGui.Destroy()
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
     Return
 }
 
 if not WinExist("ahk_exe java.exe"){
+    MyGui.Destroy()
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
     Return
 }
 
 ;Copy MRN from PACS
-
-;;Ensure activation of search tool window
+;Ensure activation of search tool window
 HWNDs := WinGetList("ahk_exe InteleViewer.exe")
 For id in HWNDs{
     title := WinGetTitle(id)
     if InStr(title, "Search Tool"){
         WinActivate(id)
         Sleep 500
-        WinActivate (id)
+        WinActivate(id)
     }
 } 
-Sleep 300
+Sleep 100
 
 A_Clipboard := ""
+A_Clipboard := ""
 MouseClick "left", 50, 105, 2
-Sleep 300
+Sleep 100
 Send "^c"
 Sleep 10
 Send "^c"
 Sleep 10
 Send "^c"
-ClipWait
+if( !Clipwait(1,1) ){
+    MyGui.Destroy()
+    MsgBox "Please select active patient in InteleViewer Search Tool and try again.", "Script error"
+    Return
+}
 
 mrn := A_Clipboard
 
@@ -66,26 +114,63 @@ For id in HWNDs{
 Sleep 100
 Send "{Esc}"
 
-;Check if logged in, if not then log in
-if (PixelGetColor(42, 12) != 000000){
-    Sleep 150
-    Send "!u"
-    Sleep 50
-    Send "!u"
-    Sleep 50
-    Send "^a"
-    Send "{Backspace}"
-    Send "{Ctrl Up}"
+;Define Pastetext function to paste user/pass
+Pastetext(text){
+    ClipSaved := ClipboardAll()
+    A_Clipboard := text
+    Send "^v"
     Sleep 100
-    SendText A
+    A_Clipboard := ""
+    Sleep 100
+    A_Clipboard := ClipSaved
+}
+
+;Check if logged in, if not then log in
+while (PixelGetColor(42, 12) != 000000){
+    Send "{Esc}"
+    Send "{Esc}"
+
+    if (PixelGetColor(42, 12) == 000000){
+        Break
+    } 
+
+    Sleep 150
+    Send "!p"
+    Sleep 100    
+    Send "^a"
+    Sleep 100
+    Send "{Backspace}"
+    Sleep 100
+    Pastetext(B)
     Sleep 250
-    Send "{Tab}"
-    Sleep 200
-    SendText B
-    Send "{Tab}"
-    Sleep 250
+    Send "!u"
+    Sleep 100
+    Send "^a"
+    Sleep 100
+    Send "{Backspace}"
+    Sleep 100
+    Pastetext(A)
+    Sleep 100
+
+    ;Sleep 200
+    ;Send "^a"
+    ;Send "{Backspace}"
+    ;Send "{Ctrl Up}"
+    ;Sleep 100
+    ;SendText A
+    ;Sleep 100
+    ;Send "{Tab}"
+    ;Sleep 200
+    ;SendText B
+
     Send "!l"
-    Sleep 1250
+    Sleep 1500    
+
+    if (A_Index > 3){
+        MyGui.Destroy()
+        MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
+        Return
+    }
 }
 
 ;Open single patient lookup
@@ -228,16 +313,27 @@ Sleep 100
 Send "!o"
 Sleep 300
 MouseClick "left", 33, 117
-Sleep 400
+Sleep 700
 MouseClick "left", 33, 117
-Sleep 100
-MouseClick "left", 440, 42
+Sleep 50
+Send "!r"
+Sleep 50
+Send "!l"
+
+MyGui.Destroy()
 Return
+
 }
 
 ;----------------------------------------------------------------------------------------
 ;Open Documents Viewer
 ^+d::{
+
+;Check if logged in and patient selected
+if (PixelGetColor(42, 12) != 000000){
+    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+    Return
+}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
@@ -272,6 +368,12 @@ Return
 ;Open Labs
 ^+l::{
 
+;Check if logged in and patient selected
+if (PixelGetColor(42, 12) != 000000){
+    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+    Return
+}
+
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
@@ -293,6 +395,12 @@ For id in HWNDs{
         WinActivate (id)
     }
 }
+
+WinExist("A")
+WinActivate ("ahk_exe InteleViewer.exe")
+Sleep 50
+WinActivate
+
 Sleep 100
 Send "!r"
 Sleep 50
@@ -304,6 +412,12 @@ Return
 ;Open Pathology
 ^+p::{
 
+;Check if logged in and patient selected
+if (PixelGetColor(42, 12) != 000000){
+    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+    Return
+}
+
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
@@ -325,6 +439,12 @@ For id in HWNDs{
         WinActivate (id)
     }
 }
+
+WinExist("A")
+WinActivate ("ahk_exe InteleViewer.exe")
+Sleep 50
+WinActivate
+
 Sleep 100
 Send "!r"
 Sleep 50
@@ -336,6 +456,12 @@ Return
 ;Open Surgical history
 ^+s::{
 
+;Check if logged in and patient selected
+if (PixelGetColor(42, 12) != 000000){
+    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+    Return
+}
+
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
@@ -357,6 +483,12 @@ For id in HWNDs{
         WinActivate (id)
     }
 }
+
+WinExist("A")
+WinActivate ("ahk_exe InteleViewer.exe")
+Sleep 50
+WinActivate
+
 Sleep 100
 Send "!c"
 Sleep 50
@@ -369,6 +501,12 @@ Return
 ;Powerscribe dictation shortcuts
 
 `::{
+
+if not WinExist("ahk_exe Nuance.PowerScribe360.exe"){
+    MsgBox "Powerscribe is not running, please launch Powerscribe first and try again.", "Script error"
+    Return
+}
+
 WinExist("A")
 
 WinActivate ("ahk_exe Nuance.PowerScribe360.exe")
