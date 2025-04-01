@@ -169,6 +169,14 @@ while (PixelGetColor(42, 12) != 000000){
     if (A_Index > 3){
         MyGui.Destroy()
         MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
+        global A
+        global B
+    
+        MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
+    
+        A := InputBox("Please enter your OACIS username:", "Username").value
+        B := InputBox("Please enter your OACIS password:", "Password", "password").value
+        
         Return
     }
 }
