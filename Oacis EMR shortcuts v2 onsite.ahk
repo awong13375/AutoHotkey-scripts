@@ -24,14 +24,28 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "Ctrl+Shift+S = Opens OPERA surgical procedures`n`n`n"
     . "For those with handsfree dictation setups:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
-    . "Script creator: Alexander Wong, with the support of ____ who helped test/debug script during its development.`n`n"
-    . "Version: 1.0, released March 31, 2025."
+    . "Script creator: Alexander Wong.`n`n"
+    . "Version: 1.0, released Apr 5, 2025."
 
 MsgBox text, "INSTRUCTIONS"
 
 ; Manual input username and password for OACIS
 A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
+
+; Keep OACIS from idle log off
+timestamp1 := A_TickCount
+while WinActive("ahk_exe java.exe"){
+    timestamp1 := A_TickCount
+}
+while !WinActive("ahk_exe java.exe"){
+    timeinactive := A_Tickcount - timestamp1
+    if (timeinactive > 180000 ){
+        ControlSend("{Esc}", WinTitle := "ahk_exe java.exe")
+    }
+}
+
+
 
 ; To show instructions again
 ^+i::{
@@ -136,7 +150,7 @@ while (PixelGetColor(42, 12) != 000000){
 
     Sleep 150
     Send "!p"
-    Sleep 100    
+    Sleep 200    
     Send "^a"
     Sleep 100
     Send "{Backspace}"
@@ -144,7 +158,7 @@ while (PixelGetColor(42, 12) != 000000){
     Pastetext(B)
     Sleep 250
     Send "!u"
-    Sleep 100
+    Sleep 200
     Send "^a"
     Sleep 100
     Send "{Backspace}"
