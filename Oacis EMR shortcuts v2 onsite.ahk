@@ -34,16 +34,16 @@ A := InputBox("Please enter your OACIS username:","Username").value
 B := InputBox("Please enter your OACIS password","Password", "password").value
 
 ; Keep OACIS from idle log off
-timestamp1 := A_TickCount
-while WinActive("ahk_exe java.exe"){
-    timestamp1 := A_TickCount
-}
-while !WinActive("ahk_exe java.exe"){
-    timeinactive := A_Tickcount - timestamp1
-    if (timeinactive > 180000 ){
-        ControlSend("{Esc}", WinTitle := "ahk_exe java.exe")
-    }
-}
+;timestamp1 := A_TickCount
+;while WinActive("ahk_exe java.exe"){
+;    timestamp1 := A_TickCount
+;}
+;while !WinActive("ahk_exe java.exe"){
+;    timeinactive := A_Tickcount - timestamp1
+;    if (timeinactive > 180000 ){
+;        ControlSend("{Esc}", WinTitle := "ahk_exe java.exe")
+;    }
+;}
 
 
 
@@ -150,33 +150,29 @@ while (PixelGetColor(42, 12) != 000000){
 
     Sleep 150
     Send "!p"
+    Sleep 150
+    Send "!p"
     Sleep 200    
     Send "^a"
     Sleep 100
     Send "{Backspace}"
     Sleep 100
+    Send "!p"
+    Sleep 150
     Pastetext(B)
     Sleep 250
     Send "!u"
-    Sleep 200
+    Sleep 150
+    Send "!u"
+    Sleep 150
     Send "^a"
     Sleep 100
     Send "{Backspace}"
+    Sleep 150
+    Send "!u"
     Sleep 100
     Pastetext(A)
-    Sleep 100
-
-    ;Sleep 200
-    ;Send "^a"
-    ;Send "{Backspace}"
-    ;Send "{Ctrl Up}"
-    ;Sleep 100
-    ;SendText A
-    ;Sleep 100
-    ;Send "{Tab}"
-    ;Sleep 200
-    ;SendText B
-
+    Sleep 250
     Send "!l"
     Sleep 1500    
 
