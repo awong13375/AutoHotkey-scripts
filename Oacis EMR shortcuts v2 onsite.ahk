@@ -140,6 +140,19 @@ Pastetext(text){
 }
 
 ;Check if logged in, if not then log in
+
+Sleep 150
+Send "!p"
+Sleep 150
+Pastetext(B)
+Sleep 250
+Send "+{Tab}"
+Sleep 100
+Pastetext(A)
+Sleep 250
+Send "!l"
+Sleep 2000 
+
 while (PixelGetColor(42, 12) != 000000){
     Send "{Esc}"
     Send "{Esc}"
@@ -150,33 +163,25 @@ while (PixelGetColor(42, 12) != 000000){
 
     Sleep 150
     Send "!p"
-    Sleep 150
-    Send "!p"
-    Sleep 200    
+    Sleep 150 
     Send "^a"
     Sleep 100
     Send "{Backspace}"
-    Sleep 100
-    Send "!p"
     Sleep 150
     Pastetext(B)
     Sleep 250
-    Send "!u"
-    Sleep 150
-    Send "!u"
+    Send "+{Tab}"
     Sleep 150
     Send "^a"
     Sleep 100
     Send "{Backspace}"
     Sleep 150
-    Send "!u"
-    Sleep 100
     Pastetext(A)
     Sleep 250
     Send "!l"
     Sleep 1500    
 
-    if (A_Index > 3){
+    if (A_Index > 5){
         MyGui.Destroy()
         MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
         global A
@@ -194,6 +199,19 @@ while (PixelGetColor(42, 12) != 000000){
 ;Open single patient lookup
 MouseClick "left", 291, 39
 Sleep 750
+
+; Make sure MRN search is selected
+;CoordMode "Pixel", "Client"
+;if (PixelGetColor(21, 54) != 333333){
+;        Send "+{Tab}"
+;	Sleep 150
+;	while (PixelGetColor(21, 54) != 333333){
+;		Send "{Left}"
+;		Sleep 250
+;	}
+;
+;	Send "{Tab}"
+;} 
 
 ;Search specific database based on hospital MRN
 
