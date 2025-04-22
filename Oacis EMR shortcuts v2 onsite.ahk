@@ -11,12 +11,12 @@ AutoShutdown()
 
 ; Message box with tutorial
 text := "Script is designed to improve your workflow efficiency and reduce the number of clicks on OACIS.`n`n"
-    . "REQUIREMENTS: Please have Inteleviewer opened to the specific patient and study, and OACIS opened.`n`n"
+    . "REQUIREMENTS: Please have Inteleviewer opened to the specific patient and study, and are logged into OACIS.`n`n"
     . "IMPORTANT: Do not touch keyboard or mouse while shortcut is running.`n`n"
     . "SHORTCUTS:`n"
-    . "Ctrl+Shift+O = Login to Oacis (if not already logged in), retrieves patient file and opens labs`n"
+    . "Ctrl+Shift+O = Retrieves patient file and opens labs`n"
     . "Ctrl+Shift+I = To show these instructions again at any time`n"
-    . "Ctrl+Shift+Q = To re-enter OACIS username/password if typo made on first try`n`n"
+;    . "Ctrl+Shift+Q = To re-enter OACIS username/password if typo made on first try`n`n"
     . "The below shortcuts require patient to already be retrieved on Oacis (using Ctrl+Shift+O above)`n"
     . "Ctrl+Shift+D = Opens Documents viewer`n"
     . "Ctrl+Shift+P = Opens Pathology`n"
@@ -25,13 +25,13 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "For those with handsfree dictation setups:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
-    . "Version: 1.0, released Apr 5, 2025."
+    . "Version: 1.0, released May 1, 2025."
 
 MsgBox text, "INSTRUCTIONS"
 
 ; Manual input username and password for OACIS
-A := InputBox("Please enter your OACIS username:","Username").value
-B := InputBox("Please enter your OACIS password","Password", "password").value
+;A := InputBox("Please enter your OACIS username:","Username").value
+;B := InputBox("Please enter your OACIS password","Password", "password").value
 
 ; Keep OACIS from idle log off
 ;timestamp1 := A_TickCount
@@ -53,15 +53,15 @@ B := InputBox("Please enter your OACIS password","Password", "password").value
 }
 
 ; Re-enter OACIS username/password
-^+q::{
-    global A
-    global B
-
-    MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
-
-    A := InputBox("Please enter your OACIS username:", "Username").value
-    B := InputBox("Please enter your OACIS password:", "Password", "password").value
-}
+;^+q::{
+;    global A
+;    global B
+;
+;    MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
+;
+;    A := InputBox("Please enter your OACIS username:", "Username").value
+;    B := InputBox("Please enter your OACIS password:", "Password", "password").value
+;}
 
 ;EMR patient launcher
 ^+o::{
@@ -129,72 +129,72 @@ Sleep 100
 Send "{Esc}"
 
 ;Define Pastetext function to paste user/pass
-Pastetext(text){
-    ClipSaved := ClipboardAll()
-    A_Clipboard := text
-    Send "^v"
-    Sleep 100
-    A_Clipboard := ""
-    Sleep 100
-    A_Clipboard := ClipSaved
-}
+;Pastetext(text){
+;    ClipSaved := ClipboardAll()
+;    A_Clipboard := text
+;    Send "^v"
+;    Sleep 100
+;    A_Clipboard := ""
+;    Sleep 100
+;    A_Clipboard := ClipSaved
+;}
 
 ;Check if logged in, if not then log in
 
-Sleep 150
-Send "!p"
-Sleep 150
-Pastetext(B)
-Sleep 250
-Send "+{Tab}"
-Sleep 100
-Pastetext(A)
-Sleep 250
-Send "!l"
-Sleep 2000 
+;Sleep 150
+;Send "!p"
+;Sleep 150
+;Pastetext(B)
+;Sleep 250
+;Send "+{Tab}"
+;Sleep 100
+;Pastetext(A)
+;Sleep 250
+;Send "!l"
+;Sleep 2000 
 
-while (PixelGetColor(42, 12) != 000000){
-    Send "{Esc}"
-    Send "{Esc}"
-
-    if (PixelGetColor(42, 12) == 000000){
-        Break
-    } 
-
-    Sleep 150
-    Send "!p"
-    Sleep 150 
-    Send "^a"
-    Sleep 100
-    Send "{Backspace}"
-    Sleep 150
-    Pastetext(B)
-    Sleep 250
-    Send "+{Tab}"
-    Sleep 150
-    Send "^a"
-    Sleep 100
-    Send "{Backspace}"
-    Sleep 150
-    Pastetext(A)
-    Sleep 250
-    Send "!l"
-    Sleep 1500    
-
-    if (A_Index > 5){
-        MyGui.Destroy()
-        MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
-        global A
-        global B
-    
-        MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
-    
-        A := InputBox("Please enter your OACIS username:", "Username").value
-        B := InputBox("Please enter your OACIS password:", "Password", "password").value
-        
-        Return
-    }
-}
+;while (PixelGetColor(42, 12) != 000000){
+;    Send "{Esc}"
+;    Send "{Esc}"
+;
+;    if (PixelGetColor(42, 12) == 000000){
+;        Break
+;    } 
+;
+;    Sleep 150
+;    Send "!p"
+;    Sleep 150 
+;    Send "^a"
+;    Sleep 100
+;    Send "{Backspace}"
+;    Sleep 150
+;    Pastetext(B)
+;    Sleep 250
+;    Send "+{Tab}"
+;    Sleep 150
+;    Send "^a"
+;    Sleep 100
+;    Send "{Backspace}"
+;    Sleep 150
+;    Pastetext(A)
+;    Sleep 250
+;    Send "!l"
+;    Sleep 1500    
+;
+;    if (A_Index > 5){
+;        MyGui.Destroy()
+;        MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
+;        global A
+;        global B
+;    
+;        MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
+;    
+;        A := InputBox("Please enter your OACIS username:", "Username").value
+;        B := InputBox("Please enter your OACIS password:", "Password", "password").value
+;        
+;        Return
+;    }
+;}
 
 ;Open single patient lookup
 MouseClick "left", 291, 39
@@ -366,10 +366,10 @@ Return
 ^+d::{
 
 ;Check if logged in and patient selected
-if (PixelGetColor(42, 12) != 000000){
-    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-    Return
-}
+;if (PixelGetColor(42, 12) != 000000){
+;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+;    Return
+;}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
@@ -405,10 +405,10 @@ Return
 ^+l::{
 
 ;Check if logged in and patient selected
-if (PixelGetColor(42, 12) != 000000){
-    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-    Return
-}
+;if (PixelGetColor(42, 12) != 000000){
+;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+;    Return
+;}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
@@ -449,10 +449,10 @@ Return
 ^+p::{
 
 ;Check if logged in and patient selected
-if (PixelGetColor(42, 12) != 000000){
-    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-    Return
-}
+;if (PixelGetColor(42, 12) != 000000){
+;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+;    Return
+;}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
@@ -493,10 +493,10 @@ Return
 ^+s::{
 
 ;Check if logged in and patient selected
-if (PixelGetColor(42, 12) != 000000){
-    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-    Return
-}
+;if (PixelGetColor(42, 12) != 000000){
+;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
+;    Return
+;}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
