@@ -1,14 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 ;----------------------------------------------------------------------------------------
 
-; Auto shutdown script after 18 hours to avoid other people using login
-SetTimer AutoShutdown, 64800000
-AutoShutdown()
-{
-    MsgBox "Oacis EMR script has automatically terminated after running for an extended period of time. Please relaunch the script and re-enter your username and password.", "Oacis EMR script Auto-shutdown."
-    ExitApp
-}
-
 ; Message box with tutorial
 text := "Script is designed to improve your workflow efficiency and reduce the number of clicks on OACIS.`n`n"
     . "REQUIREMENTS: Please have Inteleviewer opened to the specific patient and study, and are logged into OACIS.`n`n"
@@ -25,7 +17,7 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "For those with handsfree dictation setups:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
-    . "Version: 1.0, released May 1, 2025."
+    . "Version: 1.1, released Aug 1, 2025."
 
 MsgBox text, "INSTRUCTIONS"
 
