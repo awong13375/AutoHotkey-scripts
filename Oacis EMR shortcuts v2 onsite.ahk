@@ -376,13 +376,13 @@ if A == 1 {
     Sleep 100
     Send "!c"
     Sleep 50
-    Send "!o"
-} else {
-    Send "!r"
-    Sleep 50
     Send "{Up}"
     Sleep 50
     Send "{Enter}"
+} else {
+    Send "!r"
+    Sleep 50
+    Send "!l"
 }
 
 
