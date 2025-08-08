@@ -19,7 +19,7 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "To extend OACIS timeout from logging out every 5 minutes:`n"
     . "Send email to sabina.chowdury@muhc.mcgill.ca and tell her to extend OACIS timeout to 10 hours. You will need to provide her the Hostname (MUHC-AA###AAA##) of your computer, found on bottom right of Desktop wallpaper.`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
-    . "Version: 1.1, released Aug 1, 2025."
+    . "Version: 1.3, released Aug 8, 2025."
 
 MsgBox text, "INSTRUCTIONS"
 
