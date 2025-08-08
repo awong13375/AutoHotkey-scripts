@@ -13,7 +13,7 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "Ctrl+Shift+P = Opens Pathology`n"
     . "Ctrl+Shift+L = Opens Labs`n"
     . "Ctrl+Shift+S = Opens OPERA surgical procedures`n`n`n"
-    . "Ctrl+Alt+Shift+O = To change default window that opens using Ctrl+Shift+O shortcut`n`n`n"
+    . "Ctrl+Alt+Shift+O = To change default window that opens on OACIS using the Ctrl+Shift+O shortcut`n`n`n"
     . "For those with handsfree dictation setups:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
@@ -59,7 +59,8 @@ MsgBox text, "INSTRUCTIONS"
 global A
 A:= 1 ; Default to Labs
 ^!+o::{
-    A:= InputBox("Please enter number below corresponding to default OACIS window to open using Ctrl+Shift+O`n`n"
+    global A
+    A:= InputBox("Please enter number below corresponding to default OACIS window to open using Ctrl+Shift+O`n"
     . "1 = Labs`n"
     . "2 = Documents viewer`n"
     . "3 = Pathology`n"
