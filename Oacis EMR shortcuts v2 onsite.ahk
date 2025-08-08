@@ -373,11 +373,10 @@ if A == 1 {
     Sleep 50
     MouseClick "left", 320, 140
 } else if A == 4 {
+    Sleep 100
     Send "!c"
-    Sleep 100
-    Send "{Up}"
-    Sleep 100
-    Send "{Enter}"
+    Sleep 50
+    Send "!o"
 } else {
     Send "!r"
     Sleep 50
