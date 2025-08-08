@@ -375,7 +375,9 @@ if A == 1 {
 } else if A == 4 {
     Send "!c"
     Sleep 100
-    Send "!o"
+    Send "{Up}"
+    Sleep 100
+    Send "{Enter}"
 } else {
     Send "!r"
     Sleep 50
