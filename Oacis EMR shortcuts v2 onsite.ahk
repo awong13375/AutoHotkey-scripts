@@ -16,6 +16,8 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "Ctrl+Alt+Shift+O = To change default window that opens on OACIS using the Ctrl+Shift+O shortcut`n`n`n"
     . "For those with handsfree dictation setups:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
+    . To extend OACIS timeout from logging out every 5 minutes:`n"
+    . "Send email to sabina.chowdury@muhc.mcgill.ca and tell her to extend OACIS timeout to 10 hours. You will need to provide her the Hostname (MUHC-AA###AAA##) of your computer, found on bottom right of Desktop wallpaper.`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
     . "Version: 1.1, released Aug 1, 2025."
 
