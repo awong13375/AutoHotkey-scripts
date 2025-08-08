@@ -375,10 +375,12 @@ if A == 1 {
 } else if A == 4 {
     Sleep 100
     Send "!c"
-    Sleep 1000
-    Send "{Up}"
-    Sleep 1000
-    Send "{Enter}"
+    Sleep 50
+    Send "!c"
+    Sleep 50
+    Send "!c"
+    Sleep 50
+    Send "!o"
 } else {
     Send "!r"
     Sleep 50
