@@ -377,6 +377,8 @@ if A == 1 {
     Send "!l"
 }
 
+A_Clipboard := ""
+A_Clipboard := ""
 
 MyGui.Destroy()
 Return
