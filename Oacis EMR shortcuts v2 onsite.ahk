@@ -56,15 +56,10 @@ MsgBox text, "INSTRUCTIONS"
 ;}
 
 ; To set default OACIS window to open using Ctrl+Shift+O
-global A
-A:= 1 ; Default to Labs
 ^!+o::{
     global A
-    A:= InputBox("Please enter number below corresponding to default OACIS window to open using Ctrl+Shift+O`n"
-    . "1 = Labs`n"
-    . "2 = Documents viewer`n"
-    . "3 = Pathology`n"
-    . "4 = OPERA Surgical procedures"
+    A:= InputBox("Please enter number corresponding to default OACIS window to open using Ctrl+Shift+O`n"
+    . "1 = Labs, 2 = Documents viewe, 3 = Pathology, 4 = OPERA Surgical procedures"
     ).value
 }
 
@@ -347,7 +342,6 @@ if (InStr(mrn, "V"))!= 0 {
     Send "{Space}"
 }
 
-
 Sleep 50
 Send "!s"
 Sleep 100
@@ -380,6 +374,10 @@ if A == 1 {
     Send "!c"
     Sleep 50
     Send "!o"
+} else {
+    Send "!r"
+    Sleep 50
+    Send "!l"
 }
 
 
