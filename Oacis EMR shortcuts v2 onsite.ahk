@@ -60,7 +60,7 @@ A:= 1
 ^!+o::{
     global A
     A:= InputBox("Please enter number corresponding to default OACIS window to open using Ctrl+Shift+O`n"
-    . "1 = Labs, 2 = Documents viewer, 3 = Pathology, 4 = OPERA Surgical procedures"
+    . "1 = Labs, 2 = Documents viewer, 3 = Pathology"
     ).value
 }
 
@@ -357,7 +357,6 @@ Sleep 50
 ; 1 = Labs
 ; 2 = Documents viewer
 ; 3 = Pathology
-; 4 = OPERA Surgical procedures 
 
 if A == 1 {
     Send "!r"
@@ -372,15 +371,6 @@ if A == 1 {
     Send "!r"
     Sleep 50
     MouseClick "left", 320, 140
-} else if A == 4 {
-    Sleep 100
-    Send "!c"
-    Sleep 50
-    Send "!c"
-    Sleep 50
-    Send "!c"
-    Sleep 50
-    Send "!o"
 } else {
     Send "!r"
     Sleep 50
