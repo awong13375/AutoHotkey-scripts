@@ -380,7 +380,9 @@ if A == 1 {
 } else {
     Send "!r"
     Sleep 50
-    Send "!l"
+    Send "{Up}"
+    Sleep 50
+    Send "{Enter}"
 }
 
 
