@@ -8,18 +8,20 @@ text := "Script is designed to improve your workflow efficiency and reduce the n
     . "SHORTCUTS:`n"
     . "Ctrl+Shift+O = Retrieves patient file and opens labs by default (can be changed, see below)`n"
     . "Ctrl+Shift+I = To show these instructions again at any time`n`n"
-    . "The below shortcuts require patient to already be retrieved on Oacis (using Ctrl+Shift+O above)`n"
+    . "Additional shortcuts require patient file to already be retrieved on Oacis (using Ctrl+Shift+O above)`n"
     . "Ctrl+Shift+D = Opens Documents viewer`n"
     . "Ctrl+Shift+P = Opens Pathology`n"
     . "Ctrl+Shift+L = Opens Labs`n"
     . "Ctrl+Shift+S = Opens OPERA surgical procedures`n`n`n"
-    . "Ctrl+Alt+Shift+O = To change default window that opens on OACIS using the Ctrl+Shift+O shortcut`n`n`n"
-    . "For those with handsfree dictation setups:`n"
+    . "Additional script settings:`n"
+    . "Ctrl+Alt+Shift+O = To change default window that opens on OACIS using the Ctrl+Shift+O shortcut`n"
+    . "Ctrl+Alt+Shift+H = To set script for remote OACIS access from home via Citrix versus onsite access (default onsite access)`n`n`n"
+    . "Handsfree dictation:`n"
     . "Backwards apostrophe (left of '1' on keyboard) = toggle dictation on/off on Powerscribe`n`n`n"
     . "To extend OACIS timeout from logging out every 5 minutes:`n"
-    . "Send email to sabina.chowdury@muhc.mcgill.ca and tell her to extend OACIS timeout to 10 hours. You will need to provide her the Hostname (MUHC-AA###AAA##) of your computer, found on bottom right of Desktop wallpaper.`n`n`n"
+    . "Send email to sabina.chowdury@muhc.mcgill.ca and tell her to extend OACIS timeout to 10 hours. You will need to provide her the Term. ID (MUHC-AA###AAA## or PC name if using home computer), found on bottom right of OACIS.`n`n`n"
     . "Script creator: Alexander Wong.`n`n"
-    . "Version: 1.3, released Aug 8, 2025."
+    . "Version Nov 9, 2025."
 
 MsgBox text, "INSTRUCTIONS"
 
@@ -38,8 +40,6 @@ MsgBox text, "INSTRUCTIONS"
 ;        ControlSend("{Esc}", WinTitle := "ahk_exe java.exe")
 ;    }
 ;}
-
-
 
 ; To show instructions again
 ^+i::{
@@ -62,7 +62,15 @@ A:= 1
 ^!+o::{
     global A
     A:= InputBox("Please enter number corresponding to default OACIS window to open using Ctrl+Shift+O`n"
-    . "1 = Labs, 2 = Documents viewer, 3 = Pathology"
+    . "1 = Labs, 2 = Documents viewer, 3 = Pathology, 4 = Surgical history"
+    ).value
+}
+
+H:= 1
+^!+h::{
+    global H
+    H:= InputBox("Please enter number corresponding to remote OACIS access from home (via Citrix) vs onsite (natively installed version)`n"
+    . "1 = Onsite, 2 = Home remote access via Citrix"
     ).value
 }
 
@@ -82,10 +90,30 @@ if not WinExist("ahk_exe InteleViewer.exe"){
     Return
 }
 
-if not WinExist("ahk_exe java.exe"){
-    MyGui.Destroy()
-    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
-    Return
+if H==1{
+
+    if not WinExist("ahk_exe java.exe"){
+        MyGui.Destroy()
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+} else if H==2{
+
+    if not WinExist("ahk_exe wfica32.exe"){
+        MyGui.Destroy()
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+} else {
+
+    if not WinExist("ahk_exe java.exe"){
+        MyGui.Destroy()
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
 }
 
 ;Copy MRN from PACS
@@ -118,6 +146,34 @@ if( !Clipwait(1,1) ){
 
 mrn := A_Clipboard
 
+if H==1 {
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 400
+            WinActivate (id)
+        }
+    }
+
+} else if H==2 {
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe wfica32.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 400
+            WinActivate (id)
+        }
+    }
+
+} else {
+
 ;Ensure activation of vOACIS
 HWNDs := WinGetList("ahk_exe java.exe")
 For id in HWNDs{
@@ -128,95 +184,30 @@ For id in HWNDs{
         WinActivate (id)
     }
 }
-Sleep 100
+
+}
+
+Sleep 500
 Send "{Esc}"
+Sleep 50
+Send "{Esc}"
+Sleep 50
+Send "!d"
+Sleep 500
+Send "{Tab}"
+Sleep 50
+Send "{Tab}"
+Sleep 50
+Send "{Enter}"
 
-;Define Pastetext function to paste user/pass
-;Pastetext(text){
-;    ClipSaved := ClipboardAll()
-;    A_Clipboard := text
-;    Send "^v"
-;    Sleep 100
-;    A_Clipboard := ""
-;    Sleep 100
-;    A_Clipboard := ClipSaved
-;}
-
-;Check if logged in, if not then log in
-
-;Sleep 150
-;Send "!p"
-;Sleep 150
-;Pastetext(B)
-;Sleep 250
-;Send "+{Tab}"
-;Sleep 100
-;Pastetext(A)
-;Sleep 250
-;Send "!l"
-;Sleep 2000 
-
-;while (PixelGetColor(42, 12) != 000000){
-;    Send "{Esc}"
-;    Send "{Esc}"
-;
-;    if (PixelGetColor(42, 12) == 000000){
-;        Break
-;    } 
-;
-;    Sleep 150
-;    Send "!p"
-;    Sleep 150 
-;    Send "^a"
-;    Sleep 100
-;    Send "{Backspace}"
-;    Sleep 150
-;    Pastetext(B)
-;    Sleep 250
-;    Send "+{Tab}"
-;    Sleep 150
-;    Send "^a"
-;    Sleep 100
-;    Send "{Backspace}"
-;    Sleep 150
-;    Pastetext(A)
-;    Sleep 250
-;    Send "!l"
-;    Sleep 1500    
-;
-;    if (A_Index > 5){
-;        MyGui.Destroy()
-;        MsgBox "Please restart script and re-enter correct username and password.", "Incorrect Username/Password"
-;        global A
-;        global B
-;    
-;        MsgBox "Stored username is: " . A . "`n`nStored password is: " . B , "Verify and re-enter username and password"
-;    
-;        A := InputBox("Please enter your OACIS username:", "Username").value
-;        B := InputBox("Please enter your OACIS password:", "Password", "password").value
-;        
-;        Return
-;    }
-;}
-
-;Open single patient lookup
-MouseClick "left", 291, 39
+;Open patient lookup
 Sleep 750
-
-; Make sure MRN search is selected
-;CoordMode "Pixel", "Client"
-;if (PixelGetColor(21, 54) != 333333){
-;        Send "+{Tab}"
-;	Sleep 150
-;	while (PixelGetColor(21, 54) != 333333){
-;		Send "{Left}"
-;		Sleep 250
-;	}
-;
-;	Send "{Tab}"
-;} 
-
-;Search specific database based on hospital MRN
+Send "{F10}"
+Sleep 50
+Send "{Right}"
+Sleep 50
+Send "!c"
+Sleep 500
 
 ;for LAC MRNs
 if (InStr(mrn, "L"))!= 0 {
@@ -345,34 +336,55 @@ if (InStr(mrn, "V"))!= 0 {
     Send "{Space}"
 }
 
-Sleep 50
-Send "!s"
+Sleep 200
+Send "!d"
 Sleep 100
 Send "!o"
-Sleep 300
-MouseClick "left", 33, 117
-Sleep 700
-MouseClick "left", 33, 117
+Sleep 750
+Send "+{Tab}"
+Sleep 50
+Send "+{Tab}"
 Sleep 50
 
 ; for default OACIS window to open
 ; 1 = Labs
 ; 2 = Documents viewer
 ; 3 = Pathology
-
+; 4 = Surgical history
 if A == 1 {
     Send "!r"
     Sleep 50
     Send "!l"
 } else if A == 2 {
-    MouseClick "left", 440, 42
-    Sleep 50
-    MouseClick "left", 440, 42
-} else if A == 3 {
-    Sleep 100
     Send "!r"
     Sleep 50
-    MouseClick "left", 320, 140
+    Send "!d"
+} else if A == 3 {
+    Send "!r"
+    Sleep 50
+    Send "{Down}"
+    Sleep 50
+    Send "{Down}"
+    Sleep 50
+    Send "{Down}"
+    Sleep 50
+    Send "{Down}"
+    Sleep 50
+    Send "{Down}"
+    Sleep 50
+    Send "{Enter}"
+} else if A == 4 {
+    Send "{F10}"
+    Sleep 50
+    Send "{Right}"
+    Sleep 50
+    Send "{Right}"
+    Sleep 50
+    Send "{Right}"
+    Sleep 50
+    Send "{Up}"
+    Sleep 50
+    Send "{Enter}"
 } else {
     Send "!r"
     Sleep 50
@@ -403,25 +415,68 @@ if not WinExist("ahk_exe InteleViewer.exe"){
     Return
 }
 
-if not WinExist("ahk_exe java.exe"){
-    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
-    Return
+if H==1 {
+
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+} else if H==2 {
+
+    if not WinExist("ahk_exe wfica32.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe wfica32.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+} else {
+
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
 }
 
-;Ensure activation of vOACIS
-HWNDs := WinGetList("ahk_exe java.exe")
-For id in HWNDs{
-    title := WinGetTitle(id)
-    if InStr(title, "OACIS"){
-        WinActivate(id)
-        Sleep 500
-        WinActivate (id)
-    }
-}
 Sleep 100
-MouseClick "left", 440, 42
+
+Send "!r"
 Sleep 50
-MouseClick "left", 440, 42
+Send "!d"
+
 Return
 }
 
@@ -442,26 +497,62 @@ if not WinExist("ahk_exe InteleViewer.exe"){
     Return
 }
 
-if not WinExist("ahk_exe java.exe"){
-    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
-    Return
-}
+if H==1 {
 
-;Ensure activation of vOACIS
-HWNDs := WinGetList("ahk_exe java.exe")
-For id in HWNDs{
-    title := WinGetTitle(id)
-    if InStr(title, "OACIS"){
-        WinActivate(id)
-        Sleep 500
-        WinActivate (id)
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
     }
-}
 
-WinExist("A")
-WinActivate ("ahk_exe InteleViewer.exe")
-Sleep 50
-WinActivate
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+
+} else if H==2 {
+
+    if not WinExist("ahk_exe wfica32.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe wfica32.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+} else {
+
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+}
 
 Sleep 100
 Send "!r"
@@ -486,31 +577,78 @@ if not WinExist("ahk_exe InteleViewer.exe"){
     Return
 }
 
-if not WinExist("ahk_exe java.exe"){
-    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
-    Return
-}
+if H==1 {
 
-;Ensure activation of vOACIS
-HWNDs := WinGetList("ahk_exe java.exe")
-For id in HWNDs{
-    title := WinGetTitle(id)
-    if InStr(title, "OACIS"){
-        WinActivate(id)
-        Sleep 500
-        WinActivate (id)
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
     }
-}
 
-WinExist("A")
-WinActivate ("ahk_exe InteleViewer.exe")
-Sleep 50
-WinActivate
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+
+} else if H==2 {
+
+    if not WinExist("ahk_exe wfica32.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe wfica32.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+} else {
+
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+}
 
 Sleep 100
 Send "!r"
 Sleep 50
-MouseClick "left", 320, 140
+Send "{Down}"
+Sleep 50
+Send "{Down}"
+Sleep 50
+Send "{Down}"
+Sleep 50
+Send "{Down}"
+Sleep 50
+Send "{Down}"
+Sleep 50
+Send "{Enter}"
+
 Return
 }
 
@@ -530,34 +668,77 @@ if not WinExist("ahk_exe InteleViewer.exe"){
     Return
 }
 
-if not WinExist("ahk_exe java.exe"){
-    MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
-    Return
-}
+if H==1 {
 
-;Ensure activation of vOACIS
-HWNDs := WinGetList("ahk_exe java.exe")
-For id in HWNDs{
-    title := WinGetTitle(id)
-    if InStr(title, "OACIS"){
-        WinActivate(id)
-        Sleep 500
-        WinActivate (id)
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
     }
-}
 
-WinExist("A")
-WinActivate ("ahk_exe InteleViewer.exe")
-Sleep 50
-WinActivate
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+
+} else if H==2 {
+
+    if not WinExist("ahk_exe wfica32.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe wfica32.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+} else {
+
+    if not WinExist("ahk_exe java.exe"){
+        MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
+        Return
+    }
+
+    ;Ensure activation of vOACIS
+    HWNDs := WinGetList("ahk_exe java.exe")
+    For id in HWNDs{
+        title := WinGetTitle(id)
+        if InStr(title, "OACIS"){
+            WinActivate(id)
+            Sleep 500
+            WinActivate (id)
+        }
+    }
+
+}
 
 Sleep 100
-Send "!c"
+Send "{F10}"
 Sleep 50
-Send "!o"
+Send "{Right}"
+Sleep 50
+Send "{Right}"
+Sleep 50
+Send "{Right}"
+Sleep 50
+Send "{Up}"
+Sleep 50
+Send "{Enter}"
 Return
 }
-
 
 ;----------------------------------------------------------------------------------------
 ;Powerscribe dictation shortcuts
