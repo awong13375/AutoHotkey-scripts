@@ -195,9 +195,9 @@ Sleep 50
 Send "!d"
 Sleep 500
 Send "{Tab}"
-Sleep 50
+Sleep 100
 Send "{Tab}"
-Sleep 50
+Sleep 100
 Send "{Enter}"
 
 ;Open patient lookup
@@ -207,7 +207,7 @@ Sleep 50
 Send "{Right}"
 Sleep 50
 Send "!c"
-Sleep 500
+Sleep 1000
 
 ;for LAC MRNs
 if (InStr(mrn, "L"))!= 0 {
@@ -336,15 +336,15 @@ if (InStr(mrn, "V"))!= 0 {
     Send "{Space}"
 }
 
-Sleep 200
+Sleep 250
 Send "!d"
 Sleep 100
 Send "!o"
-Sleep 750
+Sleep 1000
 Send "+{Tab}"
 Sleep 50
 Send "+{Tab}"
-Sleep 50
+Sleep 250
 
 ; for default OACIS window to open
 ; 1 = Labs
@@ -403,12 +403,6 @@ Return
 ;Open Documents Viewer
 ^+d::{
 
-;Check if logged in and patient selected
-;if (PixelGetColor(42, 12) != 000000){
-;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-;    Return
-;}
-
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
     MsgBox "Either Inteleviewer and/or Oacis is not running. Please launch both programs before proceeding.", "Script error"
@@ -428,7 +422,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -446,7 +442,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -464,7 +462,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -510,7 +510,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -529,7 +531,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -547,7 +551,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -564,12 +570,6 @@ Return
 ;----------------------------------------------------------------------------------------
 ;Open Pathology
 ^+p::{
-
-;Check if logged in and patient selected
-;if (PixelGetColor(42, 12) != 000000){
-;    MsgBox "Please run 'Ctrl+Shift+O' shortcut first (to select patient on Oacis) before attempting other shortcuts.", "Script error"   
-;    Return
-;}
 
 ;Check if oacis and Inteleviewer launched, if not send error message
 if not WinExist("ahk_exe InteleViewer.exe"){
@@ -590,7 +590,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -609,7 +611,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -627,7 +631,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -681,7 +687,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -700,7 +708,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
@@ -718,7 +728,9 @@ if H==1 {
         title := WinGetTitle(id)
         if InStr(title, "OACIS"){
             WinActivate(id)
-            Sleep 500
+            Sleep 50
+            WinActivate("ahk_exe InteleViewer.exe")
+            Sleep 50
             WinActivate (id)
         }
     }
